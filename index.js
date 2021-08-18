@@ -66,7 +66,7 @@ console.log(cam.toString())
 cam.eat('pizza');
 cam.eat('coffee');
 cam.eat('sushi');
-cam.eat('caorrots');
+cam.eat('carrots');
 console.log(cam.stomach);
 cam.poop();
 console.log(cam.stomach);
@@ -89,9 +89,38 @@ console.log(cam.stomach);
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-  
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
 }
+
+Car.prototype.fill = function(gallons){
+  this.tank += gallons;
+}
+Car.prototype.drive = function(distance){
+  if (distance/this.milesPerGallon > this.tank){
+    distance = this.tank * this.milesPerGallon;
+    this.odometer += distance;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`;
+  }
+  this.odometer += distance;
+  this.tank -= distance/this.milesPerGallon;
+}
+
+const newCar = new Car('blackOne',10);
+console.log(newCar);
+newCar.fill(3);
+console.log('filled');
+console.log(newCar);
+newCar.drive(15);
+console.log('drove 15m');
+console.log(newCar);
+console.log('attempt 20 more miles');
+console.log(newCar.drive(20));
+console.log(newCar);
 
 
 /*
@@ -101,18 +130,24 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
- 
+function Baby(name, age,favoriteToy) {
+ Person.call(this, name, age);
+ this.favoriteToy = favoriteToy;
+}
+
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function(){
+  return `Playing with ${this.favoriteToy}`;
 }
 
 
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. when undefined, this references the window. which is bad, prolly.
+  2. when used in a method just before a dot, example js.read(), the "this" inside of read()(if it is in there) would reference js
+  3. when using the call or apply method, "this" references what we explicity put within as an argument
+  4. when using "new" this references the new object made in the constructor
 */
 
 
